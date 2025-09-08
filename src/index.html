@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+    <title>Jester - Entertainment Directory</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🎭 Jester</h1>
+            <p class="tagline">Your Entertainment Resource Directory</p>
+        </header>
+
+        <nav class="tab-navigation">
+            <button class="tab-button active" data-tab="memes">
+                <span class="tab-icon">😂</span>
+                <span>Memes & Humor</span>
+            </button>
+            <button class="tab-button" data-tab="comedy">
+                <span class="tab-icon">🎤</span>
+                <span>Comedy Clubs</span>
+            </button>
+            <button class="tab-button" data-tab="jokes">
+                <span class="tab-icon">🤣</span>
+                <span>Jokes</span>
+            </button>
+            <button class="tab-button" data-tab="entertainment">
+                <span class="tab-icon">🎬</span>
+                <span>Local Entertainment</span>
+            </button>
+        </nav>
+
+        <main class="content-area">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search resources...">
+                <button id="searchBtn">🔍</button>
+            </div>
+
+            <div id="memes" class="tab-content active">
+                <h2>Memes & Humor Resources</h2>
+                <div class="resource-grid" id="memesGrid">
+                </div>
+            </div>
+
+            <div id="comedy" class="tab-content">
+                <h2>Comedy Clubs & Venues</h2>
+                <div class="location-selector">
+                    <select id="citySelect">
+                        <option value="">Select a city...</option>
+                        <option value="new-york">New York</option>
+                        <option value="los-angeles">Los Angeles</option>
+                        <option value="chicago">Chicago</option>
+                        <option value="san-francisco">San Francisco</option>
+                        <option value="boston">Boston</option>
+                        <option value="austin">Austin</option>
+                        <option value="seattle">Seattle</option>
+                        <option value="denver">Denver</option>
+                        <option value="atlanta">Atlanta</option>
+                        <option value="portland">Portland</option>
+                    </select>
+                </div>
+                <div class="resource-grid" id="comedyGrid">
+                </div>
+            </div>
+
+            <div id="jokes" class="tab-content">
+                <h2>Joke Resources</h2>
+                <div class="joke-display">
+                    <button id="getJokeBtn" class="primary-btn">Get Random Joke</button>
+                    <div id="jokeArea" class="joke-area"></div>
+                </div>
+                <div class="resource-grid" id="jokesGrid">
+                </div>
+            </div>
+
+            <div id="entertainment" class="tab-content">
+                <h2>Local Entertainment</h2>
+                <div class="location-selector">
+                    <input type="text" id="locationInput" placeholder="Enter your city or zip code...">
+                    <button id="findEntertainmentBtn">Find Entertainment</button>
+                </div>
+                <div class="resource-grid" id="entertainmentGrid">
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>© 2025 Jester - Entertainment at your fingertips</p>
+            <button id="themeToggle" class="theme-toggle" title="Toggle theme">🌙</button>
+        </footer>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

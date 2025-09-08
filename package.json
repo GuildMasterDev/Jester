@@ -1,0 +1,35 @@
+{
+  "name": "jester",
+  "version": "1.0.0",
+  "description": "Entertainment resource directory - Find memes, comedy clubs, jokes, and local theaters",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never"
+  },
+  "keywords": ["entertainment", "comedy", "memes", "jokes", "electron"],
+  "author": "GuildMaster Development",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.guildmasterdev.jester",
+    "productName": "Jester",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.entertainment"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
