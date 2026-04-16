@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Jester — a curated directory of memes, comedy clubs, jokes, and local entertainment resources." />
+  <meta name="color-scheme" content="dark light" />
+  <title>Jester — Entertainment Directory</title>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-elev: #14141f;
+      --bg-card: #1a1a2a;
+      --bg-chip: #1f1f30;
+      --text: #f5f5f7;
+      --text-dim: #a4a4b4;
+      --text-faint: #6a6a7c;
+      --accent: #9333ea;
+      --accent-soft: #a855f7;
+      --accent-glow: rgba(147, 51, 234, 0.35);
+      --border: #26263a;
+      --border-strong: #34344a;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --radius: 14px;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f7f6fb;
+      --bg-elev: #ffffff;
+      --bg-card: #ffffff;
+      --bg-chip: #efeaf8;
+      --text: #15131f;
+      --text-dim: #4e4a63;
+      --text-faint: #7a7690;
+      --accent: #7c22c7;
+      --accent-soft: #9333ea;
+      --accent-glow: rgba(147, 51, 234, 0.18);
+      --border: #e3dff0;
+      --border-strong: #cfc7e3;
+      --shadow: 0 8px 24px rgba(30, 22, 60, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 24px 0 32px;
+      position: relative;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin: 0 0 8px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 60%, #ec4899 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .hero .tagline {
+      color: var(--text-dim);
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 24px;
+      right: 0;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.15rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .search {
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .search .icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-chip);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .random-joke {
+      background: linear-gradient(135deg, var(--accent) 0%, #ec4899 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .random-joke h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .random-joke .joke-text {
+      font-size: 1.15rem;
+      font-weight: 500;
+      line-height: 1.5;
+      min-height: 1.5em;
+    }
+
+    .random-joke button {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .random-joke button:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .section-label {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 28px 4px 12px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .section-label .count {
+      color: var(--text-faint);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 28px var(--accent-glow);
+    }
+
+    .card .badge {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-soft);
+      background: var(--bg-chip);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--text-dim);
+      font-size: 0.93rem;
+    }
+
+    .card .visit {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent-soft);
+      text-decoration: none;
+      font-weight: 500;
+      padding-top: 4px;
+      transition: color 0.2s, gap 0.2s;
+    }
+
+    .card .visit:hover {
+      color: var(--accent);
+      gap: 10px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-faint);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 0 0;
+      color: var(--text-faint);
+      font-size: 0.85rem;
+    }
+
+    footer a { color: var(--accent-soft); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .theme-toggle { top: 8px; }
+      .app { padding: 16px 14px 60px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+      <h1>🎭 Jester</h1>
+      <p class="tagline">A curated directory of memes, comedy, and live entertainment.</p>
+    </header>
+
+    <section class="toolbar">
+      <div class="search">
+        <span class="icon" aria-hidden="true">🔍</span>
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Search all resources…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
+      <div id="chips" class="chips" role="tablist" aria-label="Filter by category"></div>
+    </section>
+
+    <section class="random-joke" aria-live="polite">
+      <h2>Random joke</h2>
+      <div id="jokeText" class="joke-text"></div>
+      <button id="nextJoke" type="button">Another one →</button>
+    </section>
+
+    <div class="section-label">
+      <span>Resources</span>
+      <span id="resultCount" class="count"></span>
+    </div>
+    <div id="grid" class="grid"></div>
+
+    <footer>
+      <p>Jester v2.0.0 · <a href="https://github.com/guildmasterdev/Jester" target="_blank" rel="noopener">Source on GitHub</a></p>
+    </footer>
+  </div>
+
+  <script>
+    const CATEGORIES = [
+      { id: 'all',           label: 'All',                icon: '✨' },
+      { id: 'memes',         label: 'Memes & Humor',      icon: '😂' },
+      { id: 'comedy',        label: 'Comedy Clubs',       icon: '🎤' },
+      { id: 'jokes',         label: 'Jokes',              icon: '🤣' },
+      { id: 'entertainment', label: 'Local Entertainment', icon: '🎬' }
+    ];
+
+    const RESOURCES = [
+      // Memes & Humor
+      { cat: 'memes', name: 'Reddit — r/memes', description: "The internet's largest meme community with fresh content daily.", url: 'https://www.reddit.com/r/memes' },
+      { cat: 'memes', name: '9GAG', description: 'Fun off the internet — memes, funny pics, GIFs and videos.', url: 'https://9gag.com' },
+      { cat: 'memes', name: 'Imgur', description: "Discover and share the internet's best memes and images.", url: 'https://imgur.com' },
+      { cat: 'memes', name: 'Know Your Meme', description: 'Database documenting internet phenomena and meme origins.', url: 'https://knowyourmeme.com' },
+      { cat: 'memes', name: 'Memedroid', description: 'Best memes and funny pics updated daily.', url: 'https://www.memedroid.com' },
+      { cat: 'memes', name: 'iFunny', description: 'Popular meme app with fresh content and community features.', url: 'https://ifunny.co' },
+      { cat: 'memes', name: 'Imgflip Meme Generator', description: 'Create your own memes with popular templates.', url: 'https://imgflip.com/memegenerator' },
+      { cat: 'memes', name: 'Reddit — r/dankmemes', description: 'Dankest memes from across the internet.', url: 'https://www.reddit.com/r/dankmemes' },
+
+      // Comedy Clubs — New York
+      { cat: 'comedy', city: 'New York',      name: 'Comedy Cellar',             description: 'Legendary Greenwich Village comedy club featuring top comedians.', url: 'https://www.comedycellar.com' },
+      { cat: 'comedy', city: 'New York',      name: "Carolines on Broadway",     description: 'Times Square comedy club with A-list performers.',                  url: 'https://www.carolines.com' },
+      { cat: 'comedy', city: 'New York',      name: 'Stand Up NY',               description: 'Upper West Side comedy club with nightly shows.',                   url: 'https://standupny.com' },
+      // LA
+      { cat: 'comedy', city: 'Los Angeles',   name: 'The Comedy Store',          description: 'Historic Sunset Strip venue where legends perform.',                 url: 'https://www.thecomedystore.com' },
+      { cat: 'comedy', city: 'Los Angeles',   name: 'The Laugh Factory',         description: 'Hollywood comedy institution since 1979.',                           url: 'https://www.laughfactory.com' },
+      { cat: 'comedy', city: 'Los Angeles',   name: 'Hollywood Improv',          description: 'Legendary comedy club on Melrose Avenue.',                           url: 'https://improv.com/hollywood' },
+      // Chicago
+      { cat: 'comedy', city: 'Chicago',       name: 'The Second City',           description: 'World-renowned improv and sketch comedy theater.',                  url: 'https://www.secondcity.com' },
+      { cat: 'comedy', city: 'Chicago',       name: 'Zanies Comedy Club',        description: "Chicago's premier stand-up comedy venue.",                          url: 'https://chicago.zanies.com' },
+      // SF
+      { cat: 'comedy', city: 'San Francisco', name: "Cobb's Comedy Club",        description: "San Francisco's premier comedy venue at Fisherman's Wharf.",        url: 'https://www.cobbscomedyclub.com' },
+      { cat: 'comedy', city: 'San Francisco', name: 'Punch Line San Francisco',  description: 'Historic comedy club in the Financial District.',                   url: 'https://www.punchlinecomedyclub.com' },
+      // Boston
+      { cat: 'comedy', city: 'Boston',        name: "Nick's Comedy Stop",        description: "Boston's original comedy club.",                                    url: 'https://www.nickscomedystop.com' },
+      { cat: 'comedy', city: 'Boston',        name: 'Laugh Boston',              description: "Seaport District's premier comedy venue.",                          url: 'https://www.laughboston.com' },
+      // Austin
+      { cat: 'comedy', city: 'Austin',        name: 'Cap City Comedy Club',      description: "Austin's home for stand-up comedy.",                                url: 'https://www.capcitycomedy.com' },
+      { cat: 'comedy', city: 'Austin',        name: 'The Creek and the Cave',    description: 'Comedy venue with multiple shows nightly.',                          url: 'https://www.creekandcave.com' },
+      // Seattle
+      { cat: 'comedy', city: 'Seattle',       name: 'The Comedy Underground',    description: "Pioneer Square's comedy destination.",                              url: 'https://www.comedyunderground.com' },
+      { cat: 'comedy', city: 'Seattle',       name: 'Laughs Comedy Club',        description: "Seattle's neighborhood comedy hotspot.",                            url: 'https://www.laughscomedy.com' },
+      // Denver
+      { cat: 'comedy', city: 'Denver',        name: 'Comedy Works',              description: "Denver's premier comedy club since 1981.",                          url: 'https://www.comedyworks.com' },
+      // Atlanta
+      { cat: 'comedy', city: 'Atlanta',       name: 'Punchline Atlanta',         description: "Atlanta's comedy landmark in Sandy Springs.",                       url: 'https://punchline.com/atlanta' },
+      { cat: 'comedy', city: 'Atlanta',       name: "Dad's Garage",              description: 'Improv comedy theater in Old Fourth Ward.',                          url: 'https://dadsgarage.com' },
+      // Portland
+      { cat: 'comedy', city: 'Portland',      name: 'Helium Comedy Club',        description: "Portland's premier stand-up comedy venue.",                         url: 'https://portland.heliumcomedy.com' },
+
+      // Jokes
+      { cat: 'jokes', name: 'JokeAPI',              description: 'Free REST API for jokes with multiple categories.',           url: 'https://jokeapi.dev' },
+      { cat: 'jokes', name: 'icanhazdadjoke',       description: "The internet's largest collection of dad jokes.",              url: 'https://icanhazdadjoke.com' },
+      { cat: 'jokes', name: 'Reddit — r/Jokes',     description: 'Community-driven joke sharing platform.',                      url: 'https://www.reddit.com/r/jokes' },
+      { cat: 'jokes', name: 'Joke of the Day',      description: 'Daily clean jokes and humor.',                                 url: 'https://www.jokeoftheday.com' },
+      { cat: 'jokes', name: "Reader's Digest Jokes", description: 'Clean, family-friendly jokes and humor.',                     url: 'https://www.rd.com/jokes' },
+      { cat: 'jokes', name: 'The Oatmeal',          description: 'Comics, quizzes, and stories with humor.',                     url: 'https://theoatmeal.com' },
+
+      // Local Entertainment
+      { cat: 'entertainment', name: 'Fandango',      description: 'Movie tickets and showtimes for theaters nationwide.',         url: 'https://www.fandango.com' },
+      { cat: 'entertainment', name: 'Ticketmaster',  description: 'Tickets for concerts, sports, theater, and more.',             url: 'https://www.ticketmaster.com' },
+      { cat: 'entertainment', name: 'StubHub',       description: 'Buy and sell tickets for sports, concerts, and theater.',     url: 'https://www.stubhub.com' },
+      { cat: 'entertainment', name: 'Eventbrite',    description: 'Discover local events and entertainment.',                     url: 'https://www.eventbrite.com' },
+      { cat: 'entertainment', name: 'Yelp Events',   description: 'Find local events, festivals, and entertainment.',             url: 'https://www.yelp.com/events' },
+      { cat: 'entertainment', name: 'Meetup',        description: 'Join local groups and attend events.',                         url: 'https://www.meetup.com' },
+      { cat: 'entertainment', name: 'Bandsintown',   description: 'Concert dates and live music events.',                         url: 'https://www.bandsintown.com' },
+      { cat: 'entertainment', name: 'Broadway.com',  description: 'Broadway shows, tickets, and news.',                           url: 'https://www.broadway.com' }
+    ];
+
+    const JOKES = [
+      "Why don't scientists trust atoms? Because they make up everything.",
+      'Why did the scarecrow win an award? He was outstanding in his field.',
+      "Why don't eggs tell jokes? They'd crack each other up.",
+      'What do you call a fake noodle? An impasta.',
+      'Why did the bicycle fall over? It was two-tired.',
+      'What do you call a bear with no teeth? A gummy bear.',
+      "Why can't a leopard play hide and seek? Because he's always spotted.",
+      'What do you call a dinosaur that crashes his car? Tyrannosaurus Wrecks.',
+      'Why did the cookie go to the doctor? Because it felt crumbly.',
+      'What do you call a bear in the rain? A drizzly bear.',
+      "I told my wife she was drawing her eyebrows too high. She looked surprised.",
+      'Parallel lines have so much in common. It’s a shame they’ll never meet.'
+    ];
+
+    const state = {
+      category: 'all',
+      query: ''
+    };
+
+    function labelFor(id) {
+      return CATEGORIES.find((c) => c.id === id)?.label ?? id;
+    }
+
+    function renderChips() {
+      const wrap = document.getElementById('chips');
+      wrap.innerHTML = '';
+      for (const c of CATEGORIES) {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'chip' + (state.category === c.id ? ' active' : '');
+        b.dataset.id = c.id;
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-selected', state.category === c.id ? 'true' : 'false');
+        b.innerHTML = `<span aria-hidden="true">${c.icon}</span><span>${c.label}</span>`;
+        b.addEventListener('click', () => {
+          state.category = c.id;
+          renderChips();
+          renderGrid();
+        });
+        wrap.appendChild(b);
+      }
+    }
+
+    function filtered() {
+      const q = state.query.trim().toLowerCase();
+      return RESOURCES.filter((r) => {
+        if (state.category !== 'all' && r.cat !== state.category) return false;
+        if (!q) return true;
+        const hay = `${r.name} ${r.description} ${r.city ?? ''} ${labelFor(r.cat)}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    function cardFor(r) {
+      const el = document.createElement('article');
+      el.className = 'card';
+      const badge = r.city ? `${labelFor(r.cat)} · ${r.city}` : labelFor(r.cat);
+      el.innerHTML = `
+        <span class="badge">${badge}</span>
+        <h3></h3>
+        <p></p>
+        <a class="visit" target="_blank" rel="noopener noreferrer">Visit <span aria-hidden="true">→</span></a>
+      `;
+      el.querySelector('h3').textContent = r.name;
+      el.querySelector('p').textContent = r.description;
+      const link = el.querySelector('a.visit');
+      link.href = r.url;
+      link.setAttribute('aria-label', `Visit ${r.name}`);
+      return el;
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('grid');
+      const count = document.getElementById('resultCount');
+      const items = filtered();
+      grid.innerHTML = '';
+      count.textContent = items.length === 1 ? '1 resource' : `${items.length} resources`;
+      if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = 'No resources match your search. Try a different term or category.';
+        grid.appendChild(empty);
+        return;
+      }
+      for (const r of items) grid.appendChild(cardFor(r));
+    }
+
+    function pickJoke() {
+      const el = document.getElementById('jokeText');
+      let next;
+      do { next = JOKES[Math.floor(Math.random() * JOKES.length)]; }
+      while (JOKES.length > 1 && next === el.textContent);
+      el.textContent = next;
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.dataset.theme = theme;
+      const btn = document.getElementById('themeToggle');
+      btn.textContent = theme === 'light' ? '☀️' : '🌙';
+      btn.setAttribute('aria-label', theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+    }
+
+    function initTheme() {
+      let saved;
+      try { saved = localStorage.getItem('jester-theme'); } catch (_) { saved = null; }
+      applyTheme(saved === 'light' ? 'light' : 'dark');
+    }
+
+    function toggleTheme() {
+      const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+      applyTheme(next);
+      try { localStorage.setItem('jester-theme', next); } catch (_) { /* ignore */ }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderChips();
+      renderGrid();
+      pickJoke();
+
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      document.getElementById('nextJoke').addEventListener('click', pickJoke);
+
+      const input = document.getElementById('searchInput');
+      input.addEventListener('input', (e) => {
+        state.query = e.target.value;
+        renderGrid();
+      });
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => { /* ignore */ });
+      });
+    }
+  </script>
+</body>
+</html>
