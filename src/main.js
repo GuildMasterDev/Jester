@@ -12,11 +12,13 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      sandbox: true,
+      webSecurity: true,
       preload: path.join(__dirname, 'preload.js')
     },
     icon: path.join(__dirname, '../assets/icon.png'),
     title: 'Jester - Entertainment Directory',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#0a0a0f',
     show: false
   });
 
@@ -31,17 +33,18 @@ function createWindow() {
   });
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      shell.openExternal(url);
+    }
     return { action: 'deny' };
   });
 }
 
-ipcMain.handle('open-external', async (event, url) => {
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    await shell.openExternal(url);
-    return true;
-  }
-  return false;
+ipcMain.handle('open-external', async (_event, url) => {
+  if (typeof url !== 'string') return false;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+  await shell.openExternal(url);
+  return true;
 });
 
 app.whenReady().then(() => {

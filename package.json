@@ -1,20 +1,21 @@
 {
   "name": "jester",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Entertainment resource directory - Find memes, comedy clubs, jokes, and local theaters",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
     "build": "electron-builder",
-    "dist": "electron-builder --publish=never"
+    "dist": "electron-builder --publish=never",
+    "lint": "node -e \"const {readdirSync}=require('fs');const {join}=require('path');const {execSync}=require('child_process');const walk=(d)=>readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(d,e.name)):[join(d,e.name)]);walk('src').filter(f=>f.endsWith('.js')).forEach(f=>{execSync('node --check '+f,{stdio:'inherit'});console.log('ok',f);})\""
   },
   "keywords": ["entertainment", "comedy", "memes", "jokes", "electron"],
   "author": "GuildMaster Development",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^28.1.0",
-    "electron-builder": "^24.9.1"
+    "electron": "^41.0.0",
+    "electron-builder": "^26.0.0"
   },
   "build": {
     "appId": "me.davidcanhelp.jester",
@@ -22,14 +23,23 @@
     "directories": {
       "output": "dist"
     },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "resources/**/*",
+      "package.json"
+    ],
     "mac": {
-      "category": "public.app-category.entertainment"
+      "category": "public.app-category.entertainment",
+      "icon": "resources/icon.icns"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "resources/icon.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "resources/icon-512.png"
     }
   }
 }
